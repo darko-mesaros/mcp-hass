@@ -1,21 +1,17 @@
-use std::sync::Arc;
-
 use anyhow::Result;
 use rmcp::{
     model::*, schemars, service::RequestContext, tool, Error as McpError, RoleServer, ServerHandler,
 };
 
 use serde::{Deserialize, Serialize};
-use tokio::sync::Mutex;
 use serde_json::json;
 
 use crate::prompts::{get_all_prompts, get_prompt_by_name};
 
 
 #[derive(Clone, Debug)]
-pub struct Entities {
-    entities: Arc<Mutex<Vec<Entity>>>,
-}
+pub struct Entities {}
+
 #[derive(Deserialize, Debug)]
 pub struct EntitiesData {
     _entities: Vec<Entity>
@@ -32,9 +28,7 @@ pub struct Entity {
 #[tool(tool_box)]
 impl Entities {
     pub fn new() -> Self {
-        Self {
-            entities: Arc::new(Mutex::new(Vec::new()))
-        }
+        Self {}
     }
     #[tool(description = "Get all available Ligths, Switches, Sensors and their current states")]
     async fn get_entities(&self) -> Result<CallToolResult, McpError> {
@@ -77,11 +71,7 @@ impl Entities {
                 prefixes.iter().any(|&prefix| entity.entity_id.starts_with(prefix))
             })
             .collect();
-        // Update the stored entities - stores it in the main Entities Struct
-        {
-            let mut entities = self.entities.lock().await;
-            *entities = filtered_entities.clone();
-        }
+
         Ok(
             CallToolResult::success(vec![Content::json(
                 &filtered_entities,
