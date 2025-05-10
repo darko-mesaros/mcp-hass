@@ -98,8 +98,6 @@ impl Entities {
             "entity_id": entity_id
         });
 
-        tracing::debug!("REQUEST SENT: {:?}", entity_id);
-
         let response = client.post(format!("http://{}:8123/api/services/light/turn_on", endpoint))
             .header("Authorization", format!("Bearer {}", token))
             .header("Content-Type", "application/json")

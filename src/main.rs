@@ -1,6 +1,5 @@
 use anyhow::Result;
 use hass::Entities;
-// counter
 use rmcp::{ServiceExt, transport::stdio};
 use tracing_subscriber::{self, EnvFilter};
 mod hass;
@@ -15,7 +14,7 @@ async fn main() -> Result<()> {
         .with_ansi(false)
         .init();
 
-    tracing::info!("Starting Rusty MCP Server");
+    tracing::info!("Starting HASS MCP Server");
 
     let service = Entities::new().serve(stdio()).await.inspect_err(|e|{
         tracing::error!("serving error: {:?}",e);
